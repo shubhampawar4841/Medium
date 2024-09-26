@@ -7,8 +7,13 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "@prisma/extension-accelerate": "^1.1.0",
+    "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
     "hono": "^4.6.3",
-    "prisma": "^5.20.0"
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.20.0",
+    "stream": "^0.0.3",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
