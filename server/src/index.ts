@@ -9,8 +9,12 @@ export const app = new Hono<{
   }
 }>();
 
+app.get('/', (c) => {
+  return c.text('Welcome to the API');
+});
 app.route('/api/v1/user', userRouter)
 app.route('/api/v1/book', bookRouter)
+
 
 
 export default app
