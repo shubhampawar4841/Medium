@@ -59,6 +59,9 @@ userRouter.post('/signup', async (c) => {
 
     // Handle database connection or creation errors
     return c.json({ error: "Failed to create user" }, 500);
+    // Add logs to track variables
+
+
   }
 });
 
