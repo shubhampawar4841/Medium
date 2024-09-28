@@ -95,6 +95,7 @@ userRouter.post('/signin', async (c) => {
       console.log("User signed in:", user);
       
       return c.json({
+        console.log("signin succesful")
         message: "Signin successful",
         jwt,
       });
