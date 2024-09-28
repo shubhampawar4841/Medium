@@ -84,3 +84,13 @@ bookRouter.get('/:id', async (c) => {
 
 	return c.json(post);
 })
+
+bookRouter.get('/bulk', async (c) => {
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL	,
+	}).$extends(withAccelerate());
+	
+	const posts = await prisma.post.find({});
+
+	return c.json(posts);
+})

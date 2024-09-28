@@ -10,99 +10,46 @@ export const userRouter = new Hono<{
     }
 }>();
 
-// Signup Route
 userRouter.post('/signup', async (c) => {
-  console.log("Signup route hit");
-
-  // Log request body for debugging
-  try {
-    const body = await c.req.json();
-    console.log("Request body:", body);
-
-    // Check if email and password are present
-    if (!body.email || !body.password) {
-      console.log("Email or password missing in request body");
-      return c.json({ error: "Email and password are required" }, 400);
-    }
-
-    // Initialize Prisma Client with the database URL
     const prisma = new PrismaClient({
       datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
-
-    // Create the user in the database
+  
+    const body = await c.req.json();
+  
     const user = await prisma.user.create({
       data: {
         email: body.email,
         password: body.password,
       },
     });
-
-    console.log("User created:", user);
-
-    // Generate a JWT token
-    const token = await sign({ id: user.id }, c.env.JWT_SECRET);
     
-    // Return the token in the response
-    return c.json({
-      message: "User created successfully",
-      jwt: token,
-    });
-
-  } catch (error) {
-    console.error("Error during signup:", error);
-
-    // Handle JSON parsing errors
-    if (error instanceof SyntaxError) {
-      return c.json({ error: "Invalid JSON input" }, 400);
-    }
-
-    // Handle database connection or creation errors
-    return c.json({ error: "Failed to create user" }, 500);
-    // Add logs to track variables
-
-
-  }
-});
-
+    const token = await sign({ id: user.id }, c.env.JWT_SECRET)
   
-// Signin Route
+    return c.json({
+      jwt: token
+    })
+})
+  
 userRouter.post('/signin', async (c) => {
-    console.log("Signin route hit");
-    
     const prisma = new PrismaClient({
-      datasourceUrl: c.env?.DATABASE_URL,
+    //@ts-ignore
+        datasourceUrl: c.env?.DATABASE_URL	,
     }).$extends(withAccelerate());
 
     const body = await c.req.json();
-
-    try {
-      const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
-          email: body.email,
-          password: body.password,
-        },
-      });
+            email: body.email,
+    password: body.password
+        }
+    });
 
-      if (!user) {
-        console.log("User not found");
+    if (!user) {
         c.status(403);
-        return c.json({ error: "User not found" });
-      }
-
-      const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
-      
-      console.log("User signed in:", user);
-      
-      return c.json({
-        console.log("signin succesful")
-        message: "Signin successful",
-        jwt,
-      });
-    } catch (error) {
-      console.error("Error during signin:", error);
-      return c.json({ error: "Signin failed" }, 500);
+        return c.json({ error: "user not found" });
     }
-});
 
-export default userRouter;
+    const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
+    return c.json({ jwt });
+})
