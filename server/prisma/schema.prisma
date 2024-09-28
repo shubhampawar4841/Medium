@@ -1,6 +1,9 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  previewFeatures = ["dataProxy"]
+  engineType    = "data-proxy" // Enable Data Proxy
 }
+
 
 datasource db {
   provider = "postgresql"
