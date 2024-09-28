@@ -9,6 +9,7 @@
     "@prisma/extension-accelerate": "^1.1.0",
     "buffer": "^6.0.3",
     "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
     "hono": "^4.6.3",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^5.20.0",

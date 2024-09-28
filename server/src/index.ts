@@ -18,7 +18,7 @@ app.get('/', (c) => {
 
   // Return response after logging
   return c.text('Welcome to the API');
-});
+}); 
 
 // User routes
 app.route('/api/v1/user', userRouter);

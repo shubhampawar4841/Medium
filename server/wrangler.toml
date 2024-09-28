@@ -2,7 +2,7 @@ name = "server"
 compatibility_date = "2024-09-25"
 compatibility_flags = [ "nodejs_compat" ]
 
-#[vars]
+[vars]
 DATABASE_URL = "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiM2I2NmMwM2UtZTIwZi00YWI3LWIwNDUtMTczOTU1NDcxNDRlIiwidGVuYW50X2lkIjoiNWI4MzAzZGNiYmI2ZTM0OWI4ZGE4NTZiY2UzNzA5YTNiOWMyY2VjYmI1NTE5ODUxOTgyNTUwMDJmZmQ0MDU3ZCIsImludGVybmFsX3NlY3JldCI6IjcwZmZkNDZjLWZmYjgtNDhlOS04ZjlmLTQ1ODliYzg4NjgwZCJ9.JxP390wJI19_kynzdtheEdLgSECQBaLoxNPaWrNDyBo"
  
-
+ 
