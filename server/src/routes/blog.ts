@@ -40,27 +40,7 @@ bookRouter.use(async (c, next) => {
 });
 
 // POST request to create a new post
-bookRouter.post('/', async (c) => {
-    const userId = c.get('userId');
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
 
-    const body = await c.req.json();
-
-    try {
-        const post = await prisma.post.create({
-            data: {
-                title: body.title,
-                content: body.content,
-                authorId: userId,
-            },
-        });
-        return c.json({ id: post.id });
-    } catch (error) {
-        return c.status(500).json({ error: "Failed to create post" });
-    }
-});
 
 // PUT request to update an existing post
 bookRouter.put('/', async (c) => {
