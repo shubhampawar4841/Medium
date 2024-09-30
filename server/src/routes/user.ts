@@ -2,19 +2,13 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
-import z from "zod";
-
-const SignupInput = z.object({
-  username:z.string().email,
-  password:z.string().min(6),
-  name:z.string().optional()
-})
+import { SignupType, SigninType } from "@100devs/medium-common"; // Import from your shared module
 
 export const userRouter = new Hono<{
-    Bindings: {
-        DATABASE_URL: string;
-        JWT_SECRET: string;
-    }
+  Bindings: {
+    DATABASE_URL: string;
+    JWT_SECRET: string;
+  }
 }>();
 
 // Signup Route
@@ -22,14 +16,7 @@ userRouter.post('/signup', async (c) => {
   console.log("Signup route hit");
 
   try {
-    const body = await c.req.json();
-    const {success}=SignupInput.safeParse(body);
-    if(!success) {
-      c.status(411);
-      return c.json({
-        message:"Input not Correct"
-      })
-    }
+    const body = await c.req.json<SignupType>(); // Use SignupType for the body
     console.log("Request body:", body);
 
     // Validate request body
@@ -72,7 +59,7 @@ userRouter.post('/signup', async (c) => {
     console.log("User created:", user);
 
     // Generate JWT token
-    const jwtSecret = "asdfgdjd"
+    const jwtSecret = c.env.JWT_SECRET;
     console.log("JWT Secret:", jwtSecret); // For debugging purposes
 
     if (!jwtSecret) {
@@ -100,30 +87,32 @@ userRouter.post('/signup', async (c) => {
   }
 });
 
-  
+// Signin Route
 userRouter.post('/signin', async (c) => {
-  try{
+  try {
     const prisma = new PrismaClient({
-    //@ts-ignore
-        datasourceUrl: c.env?.DATABASE_URL	,
+      datasourceUrl: c.env?.DATABASE_URL,
     }).$extends(withAccelerate());
 
-    const body = await c.req.json();
+    const body = await c.req.json<SigninType>(); // Use SigninType for the body
+
+    // Find user by email and password
     const user = await prisma.user.findUnique({
-        where: {
-            email: body.email,
-    password: body.password
-        }
+      where: {
+        email: body.email,
+        password: body.password,
+      },
     });
 
     if (!user) {
-        c.status(403);
-        return c.json({ error: "user not found" });
+      c.status(403);
+      return c.json({ error: "User not found" });
     }
 
-    const jwt = await sign({ id: user.id }, "asdfgdjd");
+    const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
     return c.json({ jwt });
-  }catch(e){
+  } catch (e) {
     console.log(e);
+    return c.json({ error: "Signin failed" }, 500);
   }
-})
+});

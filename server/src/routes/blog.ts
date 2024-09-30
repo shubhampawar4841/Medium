@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
+import { CreatePostType, UpdatePostType } from "@100xdevs/medium-common"; // Assuming this is your deployed zod validation
 
 export const bookRouter = new Hono<{
     Bindings: {
@@ -48,6 +49,12 @@ bookRouter.post('/', async (c) => {
 
     const body = await c.req.json();
 
+    // Validate the input using CreatePostType from the common folder
+    const { success, error } = CreatePostType.safeParse(body);
+    if (!success) {
+        return c.status(400).json({ error: error?.message || "Invalid input" });
+    }
+
     try {
         const post = await prisma.post.create({
             data: {
@@ -70,6 +77,12 @@ bookRouter.put('/', async (c) => {
     }).$extends(withAccelerate());
 
     const body = await c.req.json();
+
+    // Validate the input using UpdatePostType from the common folder
+    const { success, error } = UpdatePostType.safeParse(body);
+    if (!success) {
+        return c.status(400).json({ error: error?.message || "Invalid input" });
+    }
 
     try {
         await prisma.post.update({
