@@ -14,11 +14,14 @@ const app = new Hono<{
 }>();
 
 // Configure CORS options
-
-
-// Use CORS middleware with options
 app.use("/*", cors());
 
+// Set up a basic GET route for the root path
+app.get("/", (c) => {
+  return c.text("Welcome to the API!"); // or any other message
+});
+
+// Define routes for user and blog APIs
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);
 
