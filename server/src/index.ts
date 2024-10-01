@@ -6,22 +6,22 @@ export const app = new Hono();
 
 // CORS middleware
 app.use('*', (c, next) => {
-  c.header('Access-Control-Allow-Origin', '*');
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  c.res.headers.set('Access-Control-Allow-Origin', '*');  // Replace with specific origin in production
+  c.res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   return next();
 });
 
-// Handle CORS preflight
+// Preflight request handler (applied globally)
 app.options('*', (c) => {
-  return c.json(null, 204);
+  c.res.headers.set('Access-Control-Allow-Origin', '*');  // Replace with specific origin in production
+  c.res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  return c.text('');  // Send an empty response
 });
 
 // Root route
 app.get('/', (c) => {
-  console.log("Ready to handle request");
-  console.log("DATABASE_URL:", c.env.DATABASE_URL);
-  console.log("JWT_SECRET:", c.env.JWT_SECRET);
   return c.text('Welcome to the API');
 });
 
