@@ -1,8 +1,8 @@
-import { SignupInput } from "@100devs/medium-common";
+import { SignupInput } from "@jainsparsh17/medium-common";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
@@ -13,17 +13,18 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     password: "",
   });
 
-  async function sendRequest() {
+  async function sendRequest(e: React.FormEvent) {
+    e.preventDefault(); // Prevent the form from reloading the page
     try {
       const res = await axios.post(
-        `${BACKEND_URL}/api/v1/user/${type == "signup" ? "signup" : "signin"}`,
+        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
         postInputs
       );
       const jwt = res.data.jwt;
       localStorage.setItem("token", jwt);
       navigate("/blogs");
     } catch (err) {
-      alert("Error : Request failed");
+      alert("Error: Request failed");
     }
   }
 
@@ -47,48 +48,52 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               </Link>
             </div>
           </div>
+
           <div className="mt-2 pt-2 flex flex-col">
-            {type === "signup" && (
+            <form onSubmit={sendRequest}>
+              {type === "signup" && (
+                <LabelledInput
+                  label="Name"
+                  placeholder="Enter your name"
+                  onChange={(e) => {
+                    setPostInputs({ ...postInputs, name: e.target.value });
+                  }}
+                />
+              )}
               <LabelledInput
-                label="Name"
-                placeholder="Enter your name"
+                label="Email"
+                placeholder="Enter your email"
                 onChange={(e) => {
-                  setPostInputs({ ...postInputs, name: e.target.value });
+                  setPostInputs({ ...postInputs, username: e.target.value });
+                }}
+                autocomplete="email"
+              />
+              <LabelledInput
+                label="Password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete={type === "signup" ? "new-password" : "current-password"} // Added autocomplete attribute
+                onChange={(e) => {
+                  setPostInputs({ ...postInputs, password: e.target.value });
                 }}
               />
-            )}
-            <LabelledInput
-              label="Email"
-              placeholder="Enter your email"
-              onChange={(e) => {
-                setPostInputs({ ...postInputs, username: e.target.value });
-              }}
-            />
-            <LabelledInput
-              label="Password"
-              type="password"
-              placeholder="Enter your password"
-              onChange={(e) => {
-                setPostInputs({ ...postInputs, password: e.target.value });
-              }}
-            />
-            <button
-              onClick={sendRequest}
-              type="button"
-              className="relative inline-block text-lg group mt-8"
-            >
-              <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
-                <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
-                <span className="absolute left-0 w-[28rem] h-96 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                <span className="relative">
-                  {type === "signup" ? "Sign up" : "Sign in"}
+              <button
+                type="submit" // Changed to submit to handle form submission properly
+                className="relative inline-block text-lg group mt-8"
+              >
+                <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                  <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
+                  <span className="absolute left-0 w-[28rem] h-96 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                  <span className="relative">
+                    {type === "signup" ? "Sign up" : "Sign in"}
+                  </span>
                 </span>
-              </span>
-              <span
-                className="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
-                data-rounded="rounded-lg"
-              ></span>
-            </button>
+                <span
+                  className="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                  data-rounded="rounded-lg"
+                ></span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -101,13 +106,15 @@ type LabelledInputProps = {
   placeholder: string;
   type?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  autocomplete?: string;
 };
 
 function LabelledInput({
   label,
   placeholder,
-  type,
+  type = "text",
   onChange,
+  autocomplete = "off", // Default is off if not provided
 }: LabelledInputProps) {
   return (
     <div className="mt-4">
@@ -118,13 +125,14 @@ function LabelledInput({
         {label}
       </label>
       <input
-        type={type ? type : "text"}
+        type={type}
         id="hero-field"
         name="hero-field"
         onChange={onChange}
         placeholder={placeholder}
         className="w-full bg-gray-300 rounded border bg-opacity-40 border-gray-700 focus:ring-2 focus:ring-gray-600 focus:bg-transparent focus:border-gray-500 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-      ></input>
+        autoComplete={autocomplete} // Ensures correct autocomplete behavior
+      />
     </div>
   );
 }

@@ -14,14 +14,10 @@ const app = new Hono<{
 }>();
 
 // Configure CORS options
-const corsOptions = {
-  origin: 'http://localhost:5173', // Allow requests from this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-};
+
 
 // Use CORS middleware with options
-app.use("/*", cors(corsOptions));
+app.use("/*", cors());
 
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);
