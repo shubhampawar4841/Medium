@@ -117,7 +117,7 @@ blogRouter.get('/:id', async (c) => {
 });
 
 // GET request to retrieve all posts
-blogRouter.get('/bulk', async (c) => {
+blo.get('/bulk', async (c) => {
     try {
         const posts = await prisma.post.findMany({});
         return c.json(posts);

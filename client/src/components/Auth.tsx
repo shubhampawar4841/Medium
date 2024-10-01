@@ -1,4 +1,4 @@
-import { SignupInput } from "@jainsparsh17/medium-common";
+import { SignupInput } from "@100devs/medium-common";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,16 +15,22 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
   async function sendRequest(e: React.FormEvent) {
     e.preventDefault(); // Prevent the form from reloading the page
+
     try {
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
         postInputs
       );
-      const jwt = res.data.jwt;
+
+      // Assuming your backend returns a JWT on successful login/signup
+      const jwt = res.data.jwt; 
       localStorage.setItem("token", jwt);
       navigate("/blogs");
-    } catch (err) {
-      alert("Error: Request failed");
+    } catch (err: any) {
+      // Enhance error handling
+      const errorMessage = err.response?.data?.message || "Request failed";
+      console.error("Error during request:", errorMessage);
+      alert(`Error: ${errorMessage}`);
     }
   }
 
@@ -66,19 +72,19 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 onChange={(e) => {
                   setPostInputs({ ...postInputs, username: e.target.value });
                 }}
-                autocomplete="email"
+                autoComplete="email"
               />
               <LabelledInput
                 label="Password"
                 type="password"
                 placeholder="Enter your password"
-                autocomplete={type === "signup" ? "new-password" : "current-password"} // Added autocomplete attribute
+                autoComplete={type === "signup" ? "new-password" : "current-password"}
                 onChange={(e) => {
                   setPostInputs({ ...postInputs, password: e.target.value });
                 }}
               />
               <button
-                type="submit" // Changed to submit to handle form submission properly
+                type="submit"
                 className="relative inline-block text-lg group mt-8"
               >
                 <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
@@ -106,7 +112,7 @@ type LabelledInputProps = {
   placeholder: string;
   type?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  autocomplete?: string;
+  autoComplete?: string;
 };
 
 function LabelledInput({
@@ -114,7 +120,7 @@ function LabelledInput({
   placeholder,
   type = "text",
   onChange,
-  autocomplete = "off", // Default is off if not provided
+  autoComplete = "off",
 }: LabelledInputProps) {
   return (
     <div className="mt-4">
@@ -131,7 +137,7 @@ function LabelledInput({
         onChange={onChange}
         placeholder={placeholder}
         className="w-full bg-gray-300 rounded border bg-opacity-40 border-gray-700 focus:ring-2 focus:ring-gray-600 focus:bg-transparent focus:border-gray-500 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-        autoComplete={autocomplete} // Ensures correct autocomplete behavior
+        autoComplete={autoComplete}
       />
     </div>
   );
