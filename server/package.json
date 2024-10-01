@@ -3,7 +3,6 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
-    "build": "tsc && vite build",
     "start": "node index.js"
   },
   "dependencies": {
