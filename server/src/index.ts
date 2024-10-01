@@ -9,11 +9,19 @@ const app = new Hono<{
     JWT_SECRET: string;
   };
   Variables: {
-    userId: String;
+    userId: string;
   };
 }>();
 
-app.use("/*", cors());
+// Configure CORS options
+const corsOptions = {
+  origin: 'http://localhost:5173', // Allow requests from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+};
+
+// Use CORS middleware with options
+app.use("/*", cors(corsOptions));
 
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);
