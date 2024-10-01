@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
     datasourceUrl: process.env.DATABASE_URL,
 }).$extends(withAccelerate());
 
-export const bookRouter = new Hono<{
+export const blogRouter = new Hono<{
     Bindings: {
         DATABASE_URL: string;
         JWT_SECRET: string;
@@ -19,7 +19,7 @@ export const bookRouter = new Hono<{
 }>();
 
 // Middleware to check for JWT authorization
-bookRouter.use(async (c, next) => {
+blogRouter.use(async (c, next) => {
     const jwt = c.req.header('Authorization');
     console.log('Authorization Header:', jwt);
 
@@ -46,7 +46,7 @@ bookRouter.use(async (c, next) => {
 });
 
 // POST request to create a new post
-bookRouter.post('/', async (c) => {
+blogRouter.post('/', async (c) => {
     const userId = c.get('userId');
     const body = await c.req.json();
 
@@ -71,7 +71,7 @@ bookRouter.post('/', async (c) => {
 });
 
 // PUT request to update an existing post
-bookRouter.put('/', async (c) => {
+blogRouter.put('/', async (c) => {
     const userId = c.get('userId');
     const body = await c.req.json();
 
@@ -99,7 +99,7 @@ bookRouter.put('/', async (c) => {
 });
 
 // GET request to retrieve a post by ID
-bookRouter.get('/:id', async (c) => {
+blogRouter.get('/:id', async (c) => {
     const id = c.req.param('id');
 
     try {
@@ -117,7 +117,7 @@ bookRouter.get('/:id', async (c) => {
 });
 
 // GET request to retrieve all posts
-bookRouter.get('/bulk', async (c) => {
+blogRouter.get('/bulk', async (c) => {
     try {
         const posts = await prisma.post.findMany({});
         return c.json(posts);
