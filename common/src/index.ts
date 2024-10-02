@@ -28,3 +28,8 @@ export const updatePostInput = z.object({
 });
 
 export type UpdatePostType = z.infer<typeof updatePostInput>; 
+
+exports.updateUserDetailsInput = zod_1.default.object({
+    name: zod_1.default.string().optional(),
+    password: zod_1.default.string().min(6).optional(),
+});

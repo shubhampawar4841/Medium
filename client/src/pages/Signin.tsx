@@ -1,8 +1,8 @@
-import { Auth } from "../components/Auth";
-import { Quote } from "../components/Quote";
+import Auth  from "../components/Auth";
+import  Quote  from "../components/Quote";
 import logo from "../assets/medium.png"
 
-export const Signin = () => {
+const Signin = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2">
       <div>
@@ -18,3 +18,5 @@ export const Signin = () => {
     </div>
   );
 };
+
+export default Signin;

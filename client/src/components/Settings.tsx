@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Toaster, toast } from "sonner";
 
 import axios from "axios";
-import { BACKEND_URL } from "../../config";
+import { BACKEND_URL } from "../config";
 
 export default function Settings() {
 	const [name, setName] = useState("");

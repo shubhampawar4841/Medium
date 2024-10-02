@@ -10,10 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "axios": "^1.7.7",
+    "dompurify": "^3.1.7",
+    "marked": "^14.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-router-dom": "^6.26.2",
+    "react-toastify": "^10.0.5",
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

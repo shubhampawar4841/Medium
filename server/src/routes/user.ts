@@ -2,117 +2,186 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
-import { SignupType, SigninType } from "@100devs/medium-common"; // Import from your shared module
+import {
+	SigninType,
+	SignupType,
+	updateUserDetailsInput,
+} from "@100devs/medium-common";
+import authMiddleware from "../authMiddleware";
 
 export const userRouter = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-    JWT_SECRET: string;
-  }
+	Bindings: {
+		DATABASE_URL: string;
+		JWT_SECRET: string;
+	};
+	Variables: {
+		userId: string;
+	};
 }>();
 
-// Signup Route
-userRouter.post('/signup', async (c) => {
-  console.log("Signup route hit");
+userRouter.post("/signup", async (c) => {
+	const body = await c.req.json();
+	const { success } = signupInput.safeParse(body);
 
-  try {
-    const body = await c.req.json<SignupType>(); // Use SignupType for the body
-    console.log("Request body:", body);
+	if (!success) {
+		c.status(411);
+		return c.json({
+			message: "Invalid inputs",
+		});
+	}
 
-    // Validate request body
-    if (!body.email || !body.password) {
-      console.log("Email or password missing in request body");
-      return c.json({ error: "Email and password are required" }, 400);
-    }
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL,
+	}).$extends(withAccelerate());
+	try {
+		const findUser = await prisma.user.findUnique({
+			where: {
+				email: body.email,
+			},
+		});
 
-    // Initialize Prisma Client with the database URL
-    const databaseUrl = c.env.DATABASE_URL;
-    console.log("Database URL:", databaseUrl); // For debugging purposes
-
-    if (!databaseUrl) {
-      console.error("DATABASE_URL is undefined");
-      return c.json({ error: "Database connection error" }, 500);
-    }
-
-    const prisma = new PrismaClient({
-      datasourceUrl: databaseUrl,
-    }).$extends(withAccelerate());
-
-    // Check if a user with the email already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: body.email },
-    });
-
-    if (existingUser) {
-      console.log("User with this email already exists");
-      return c.json({ error: "Email already in use" }, 409); // Conflict
-    }
-
-    // Create the new user
-    const user = await prisma.user.create({
-      data: {
-        email: body.email,
-        password: body.password, // Note: Consider hashing the password before storing it
-      },
-    });
-
-    console.log("User created:", user);
-
-    // Generate JWT token
-    const jwtSecret = c.env.JWT_SECRET;
-    console.log("JWT Secret:", jwtSecret); // For debugging purposes
-
-    if (!jwtSecret) {
-      console.error("JWT_SECRET is undefined");
-      return c.json({ error: "JWT secret is not configured" }, 500);
-    }
-
-    const token = await sign({ id: user.id }, jwtSecret);
-
-    return c.json({
-      message: "User created successfully",
-      jwt: token,
-    });
-
-  } catch (error) {
-    console.error("Error during signup:", error);
-
-    // Handle specific error codes
-    if (error.code === 'P2002') {
-      return c.json({ error: "Unique constraint failed: Email" }, 409);
-    }
-
-    // Generic error handling
-    return c.json({ error: "An error occurred during signup" }, 500);
-  }
+		if (findUser) {
+			c.status(411);
+			return c.json({
+				message: "Email already exists",
+			});
+		}
+		console.log(findUser);
+		const user = await prisma.user.create({
+			data: {
+				email: body.email,
+				name: body.name,
+				password: body.password,
+			},
+		});
+		const jwt = await sign(
+			{ id: user.id, email: body.email, name: user.name },
+			c.env.JWT_SECRET
+		);
+		return c.json({ jwt });
+	} catch (e) {
+		c.status(403);
+		console.log(e, "error");
+		return c.json({ error: "Error while signing up" });
+	}
 });
 
-// Signin Route
-userRouter.post('/signin', async (c) => {
-  try {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env?.DATABASE_URL,
-    }).$extends(withAccelerate());
+userRouter.post("/signin", async (c) => {
+	const body = await c.req.json();
+	const { success } = signinInput.safeParse(body);
 
-    const body = await c.req.json<SigninType>(); // Use SigninType for the body
+	if (!success) {
+		c.status(411);
+		return c.json({
+			message: "Invalid inputs",
+		});
+	}
 
-    // Find user by email and password
-    const user = await prisma.user.findUnique({
-      where: {
-        email: body.email,
-        password: body.password,
-      },
-    });
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL,
+	}).$extends(withAccelerate());
 
-    if (!user) {
-      c.status(403);
-      return c.json({ error: "User not found" });
-    }
+	try {
+		const user = await prisma.user.findUnique({
+			where: {
+				email: body.email,
+				password: body.password,
+			},
+		});
 
-    const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
-    return c.json({ jwt });
-  } catch (e) {
-    console.log(e);
-    return c.json({ error: "Signin failed" }, 500);
-  }
+		if (!user) {
+			c.status(403);
+			return c.json({
+				error: "Incorrect credentials",
+			});
+		}
+
+		const jwt = await sign(
+			{
+				id: user.id,
+				email: user.email,
+				name: user.name,
+			},
+			c.env.JWT_SECRET
+		);
+		return c.json({ jwt });
+	} catch (e) {
+		c.status(411);
+		console.log("error", e);
+		return c.json({ message: "Error signing in" });
+	}
+});
+
+userRouter.put("/update", authMiddleware, async (c) => {
+	const body = await c.req.json();
+
+	const { success } = updateUserDetailsInput.safeParse(body);
+
+	if (!success) {
+		c.status(411);
+		return c.json({
+			message: "Invalid Inputs",
+		});
+	}
+
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL,
+	}).$extends(withAccelerate());
+
+	try {
+		const res = await prisma.user.update({
+			where: {
+				id: c.get("userId"),
+			},
+			data: body,
+		});
+
+		return c.json({
+			message: "Details Updated",
+		});
+	} catch (error) {
+		c.status(403);
+		return c.json({
+			message: "Internal Server Error",
+		});
+	}
+});
+
+userRouter.get("/:id", authMiddleware, async (c) => {
+	const id = c.req.param("id");
+
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL,
+	}).$extends(withAccelerate());
+
+	try {
+		const user = await prisma.user.findUnique({
+			where: {
+				id: id,
+			},
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				posts: {
+					where: {
+						published: true,
+					},
+				},
+			},
+		});
+
+		console.log(user);
+
+		return c.json({
+			user,
+		});
+	} catch (error) {
+		console.log("Error: " + error);
+
+		c.status(403);
+		return c.json({
+			message: "Internal Server Error",
+		});
+	}
 });
