@@ -3,8 +3,8 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import authMiddleware from "../authMiddleware";
 import {
-	CreatePostType,
-	UpdatePostType,
+	blogCreateInput,
+	blogUpdateInput,
 } from "@100xdevs/medium-common";
 import * as moment from "moment-timezone";
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SignupType } from "@100xdevs/medium-common";
+import { signupInput } from "@100xdevs/medium-common";
 import TitleAuth from "./AuthHeader";
 import LabelInput from "./LabelInput";
 import axios from "axios";

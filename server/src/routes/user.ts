@@ -3,8 +3,8 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import {
-	SigninType,
-	SignupType,
+	signinInput,
+	signupInput,
 	updateUserDetailsInput
 } from "@100xdevs/medium-common";
 import authMiddleware from "../authMiddleware";
