@@ -5,7 +5,7 @@ import authMiddleware from "../authMiddleware";
 import {
 	CreatePostType,
 	UpdatePostType,
-} from "@100devs/medium-common";
+} from "@100xdevs/medium-common";
 import * as moment from "moment-timezone";
 
 export const blogRouter = new Hono<{

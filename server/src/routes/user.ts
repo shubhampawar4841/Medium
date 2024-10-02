@@ -5,8 +5,8 @@ import { sign } from "hono/jwt";
 import {
 	SigninType,
 	SignupType,
-	updateUserDetailsInput,
-} from "@100devs/medium-common";
+	updateUserDetailsInput
+} from "@100xdevs/medium-common";
 import authMiddleware from "../authMiddleware";
 
 export const userRouter = new Hono<{
