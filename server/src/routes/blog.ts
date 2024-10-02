@@ -26,6 +26,7 @@ blogRouter.post("/", async (c) => {
 
 	if (!success) {
 		c.status(411);
+        console.log("here")
 		return c.json({
 			message: "Invalid inputs",
 		});
