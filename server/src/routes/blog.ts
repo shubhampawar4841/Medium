@@ -1,3 +1,4 @@
+
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
@@ -26,7 +27,6 @@ blogRouter.post("/", async (c) => {
 
 	if (!success) {
 		c.status(411);
-        console.log("here")
 		return c.json({
 			message: "Invalid inputs",
 		});
