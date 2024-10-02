@@ -1,58 +1,72 @@
-import { useNavigate } from "react-router-dom";
-import { Appbar } from "../components/Appbar";
-import { BlogCard } from "../components/BlogCard";
+import Appbar from "../components/Appbar";
+import BlogCard from "../components/BlogCard";
 import { useBlogs } from "../hooks";
-import { useEffect } from "react";
-import { BlogSkeleton } from "../components/BlogSkeleton";
 
-export const Blogs = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
-    }
-  }, []);
+export default function Blogs() {
+	const { loading, blogs } = useBlogs();
 
-  const { loading, blogs } = useBlogs();
+	if (loading) {
+		return (
+			<div>
+				<Appbar write={true}></Appbar>;
+				<div className="flex justify-center pt-16">
+					<div className="flex flex-col justify-center w-5/6 gap-7 lg:w-1/2 md:w-2/3">
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
 
-  if(loading){
-    return (
-      <div>
-        <Appbar />
-        <div className="mt-20 flex justify-center">
-          <div className="max-w-2xl w-full">
-            <BlogSkeleton />
-            <BlogSkeleton />
-            <BlogSkeleton />
-            <BlogSkeleton />
-          </div>
-        </div>
-      </div>
-    );
-  }
+						<ul className="mt-5 space-y-3">
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+						</ul>
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
 
-  return (
-    <>
-      <Appbar />
-      <h1 className="flex justify-center border-b-1 text-2xl pt-3 font-extralight">
-        Discover Blogs
-      </h1>
-      <div className="mt-3 mb-3 ml-[29rem] border max-w-xl"></div>
-      <div className="flex justify-center">
-        <div className="max-w-2xl">
-          {blogs.map((blog, index) => (
-            <BlogCard
-              key={index}
-              id={`${blog.id}`}
-              authorName={blog.author.name || "Anonymous"}
-              title={blog.title}
-              content={blog.content}
-              publishedDate="21st Feb 2024"
-            />
-          ))}
-        </div>
-      </div>
-    </>
-  );
-};
+						<ul className="mt-5 space-y-3">
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+						</ul>
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
+
+						<ul className="mt-5 space-y-3">
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div>
+			<Appbar write={true} />
+			<div className="flex justify-center pt-16">
+				<div className="flex flex-col justify-center w-5/6 gap-7 lg:w-1/2 md:w-2/3">
+					{blogs.map((blog) => {
+						return (
+							<BlogCard
+								authorId={blog.authorId}
+								key={blog.id}
+								id={blog.id}
+								authorName={blog.author.name}
+								content={blog.content}
+								title={blog.title}
+								publishedDate={blog.postedOn.substring(0, 8)}
+							/>
+						);
+					})}
+				</div>
+			</div>
+		</div>
+	);
+}

@@ -1,50 +1,76 @@
-
 import { Link } from "react-router-dom";
+import Avatar from "./Avatar";
+import ShareBtn from "./ShareBtn";
+import Preview from "./Preview";
+import EditBtn from "./EditBtn";
+import DeleteBtn from "./DeleteBtn";
 
-type BlogCardProps = {
-  authorName: string;
-  title: string;
-  content: string;
-  publishedDate: string;
-  id: string;
-};
+interface BlogCardProps {
+	authorName: string;
+	authorId: string;
+	title: string;
+	content: string;
+	id: string;
+	publishedDate: string;
+}
 
-export const BlogCard = ({
-  authorName,
-  title,
-  content,
-  publishedDate,
-  id,
-}: BlogCardProps) => {
-  return (
-    <Link to={`/blog/${id}`}>
-      <div className="p-4 border-b-[0.01rem] pb-3 border-gray-300 cursor-pointer">
-        <div className="flex gap-2 items-center">
-          <Avatar size={"small"} name={authorName} />
-          <div className="font-normal text-sm">{authorName}</div>
-          <div className="text-xs text-slate-600">&bull;</div>
-          <div className="font-thin text-xs text-slate-500">
-            {publishedDate}
-          </div>
-        </div>
-        <div className="text-xl font-bold pt-2">{title}</div>
-        <div className="font-light text-md">
-          {content.slice(0, 250)}{content.length>250?"...":""}
-        </div>
-        <div className="text-slate-500 text-xs font-thin pt-2">{`${Math.ceil(
-          content.length / 100
-        )} min read`}</div>
-      </div>
-    </Link>
-  );
-};
+export default function BlogCard({
+	authorName,
+	title,
+	authorId,
+	content,
+	id,
 
-export function Avatar({ name, size }: { name: string; size?: string }) {
-  return (
-    <div
-      className={`relative inline-flex items-center justify-center ${size=="big"?"w-8 h-8":"w-4 h-4"} overflow-hidden rounded-full bg-gray-600`}
-    >
-      <span className="font-medium text-xs text-gray-300">{name[0]}</span>
-    </div>
-  );
+	publishedDate,
+}: BlogCardProps) {
+	return (
+		<div className="pb-3 border-b border-slate-200">
+			<div className="flex items-center justify-between gap-32">
+				<div className="flex items-center gap-3 ">
+					<Link
+						to={"/user/" + authorId}
+						className="flex items-center gap-2 hover:scale-105">
+						<Avatar name={authorName}></Avatar>
+						<div className="text-base first-letter:uppercase">
+							{authorName}{" "}
+						</div>
+					</Link>
+
+					<div className="pb-3 text-2xl font-bold text-slate-400">
+						.
+					</div>
+					<div className="text-sm text-slate-400">
+						{publishedDate}
+					</div>
+				</div>
+				<div className="flex items-center justify-center gap-3">
+					<ShareBtn
+						link={`${window.location.origin}/blog/${id}`}></ShareBtn>
+					<EditBtn
+						authorId={authorId}
+						blogId={id}></EditBtn>
+					<DeleteBtn
+						blogId={id}
+						authorId={authorId}></DeleteBtn>
+				</div>
+			</div>
+			<Link
+				to={"/blog/" + id}
+				className="cursor-pointer hover:scale-105">
+				<div className="pt-2 font-serif text-2xl font-bold">
+					{title}
+				</div>
+				<div className="pt-1 font-serif font-thin text-slate-600">
+					<Preview text={content.slice(0, 450) + "..."}></Preview>
+				</div>
+				<div className="pt-2 text-sm font-normal text-slate-600">
+					{`${
+						Math.ceil(content.length / 500) > 1
+							? Math.ceil(content.length / 500) + " minutes read"
+							: "1 minute read"
+					} `}
+				</div>
+			</Link>
+		</div>
+	);
 }

@@ -1,18 +1,43 @@
-export const Quote = () => {
-    return (
-      <div className="bg-zinc-300 h-screen  flex flex-col justify-center">
-        <div className="flex justify-center">
-          <div className="max-w-lg">
-            <div className="font-bold text-3xl">
-              "Unlock your voice. Join our community and start sharing your
-              stories with the world."
-            </div>
-            <div className="max-w-md mt-4 font-semibold text-xl ">Tony Stubblebine</div>
-            <div className="max-w-md font-light text-sm text-slate-500">
-              CEO | Medium.com
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+
+import { useEffect, useState } from "react";
+import { useRandomQuote } from "../hooks";
+interface Quote {
+	text: string;
+	author: string;
+}
+
+export default function Quote() {
+	const [quote, setQuote] = useState<Quote>();
+
+	useEffect(() => {
+		const fetchQuote = async () => {
+			try {
+				const randomQuote = await useRandomQuote();
+				setQuote(randomQuote);
+			} catch (error) {
+				console.error("Error fetching quote:", error);
+			}
+		};
+
+		fetchQuote();
+	}, []);
+	return (
+		<div className="flex items-center justify-center h-screen text-3xl font-extrabold bg-slate-200">
+			<div className="w-3/4">
+				{quote ? (
+					<>
+						<div>"{quote.text}"</div>
+						<div className="mt-4 text-2xl font-semibold">
+							{quote.author.substring(
+								0,
+								quote.author.indexOf(",")
+							)}
+						</div>
+					</>
+				) : (
+					<div>Loading...</div>
+				)}
+			</div>
+		</div>
+	);
+}

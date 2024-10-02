@@ -1,145 +1,99 @@
-import { SignupType } from "@100devs/medium-common";
-import { ChangeEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { SignupInput } from "@praneethaylalvl1/medium-common";
+import TitleAuth from "./AuthHeader";
+import LabelInput from "./LabelInput";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../../config";
+import { toast, Toaster } from "sonner";
+import "react-toastify/dist/ReactToastify.css";
 
-export const Auth = ({ type }: { type: "signup" | "signin" }) => {
-  const navigate = useNavigate();
+export default function Auth({ type }: { type: "signup" | "signin" }) {
+	const [postInputs, setPostInputs] = useState<SignupInput>({
+		name: "",
+		email: "",
+		password: "",
+	});
 
-  // Change 'username' to 'email' in your state
-  const [postInputs, setPostInputs] = useState<SignupType>({
-    name: "",
-    email: "",  // This should be 'email'
-    password: "",
-  });
+	async function sendRequest() {
+		try {
+			const res = await axios.post(
+				`${BACKEND_URL}/api/v1/user/${
+					type === "signin" ? "signin" : "signup"
+				}`,
+				postInputs
+			);
 
-  async function sendRequest(e: React.FormEvent) {
-    e.preventDefault(); // Prevent the form from reloading the page
+			const jwt = res.data.jwt;
+			localStorage.setItem("token", jwt);
+			if (res.status === 200) {
+				const successMessage =
+					type === "signin"
+						? "Login Successful"
+						: "Signup Successful";
+				toast.success(successMessage);
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
+			}
+		} catch (error: any) {
+			console.warn(error);
+			const errorMessage =
+				error.response?.data?.message ?? "Invalid Inputs";
+			toast.warning(errorMessage, {
+				duration: 2000,
+			});
+		}
+	}
 
-    try {
-      const res = await axios.post(
-        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
-        postInputs
-      );
+	return (
+		<div className="flex flex-col items-center justify-center h-screen ">
+			<TitleAuth type={type}></TitleAuth>
 
-      // Assuming your backend returns a JWT on successful login/signup
-      const jwt = res.data.jwt; 
-      localStorage.setItem("token", jwt);
-      navigate("/blogs");
-    } catch (err: any) {
-      // Enhance error handling
-      const errorMessage = err.response?.data?.message || "Request failed";
-      console.error("Error during request:", errorMessage);
-      alert(`Error: ${errorMessage}`);
-    }
-  }
-
-  return (
-    <div className="flex flex-col h-screen justify-center">
-      <div className="flex justify-center">
-        <div className="w-1/2">
-          <div className="px-10">
-            <div className="text-3xl font-extrabold">
-              {type === "signup" ? "Sign up with email" : "Sign in with email"}
-            </div>
-            <div className="mt-1 text-slate-400">
-              {type === "signup"
-                ? "Already have an account?"
-                : "Don't have an account?"}{" "}
-              <Link
-                className="font-semibold underline text-black"
-                to={type === "signup" ? "/signin" : "/signup"}
-              >
-                {type === "signup" ? "Sign in" : "Sign up"}
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-2 pt-2 flex flex-col">
-            <form onSubmit={sendRequest}>
-              {type === "signup" && (
-                <LabelledInput
-                  label="Name"
-                  placeholder="Enter your name"
-                  onChange={(e) => {
-                    setPostInputs({ ...postInputs, name: e.target.value });
-                  }}
-                />
-              )}
-              <LabelledInput
-                label="Email"
-                placeholder="Enter your email"
-                onChange={(e) => {
-                  setPostInputs({ ...postInputs, email: e.target.value });  // Change 'username' to 'email'
-                }}
-                autoComplete="email"
-              />
-              <LabelledInput
-                label="Password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete={type === "signup" ? "new-password" : "current-password"}
-                onChange={(e) => {
-                  setPostInputs({ ...postInputs, password: e.target.value });
-                }}
-              />
-              <button
-                type="submit"
-                className="relative inline-block text-lg group mt-8"
-              >
-                <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
-                  <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
-                  <span className="absolute left-0 w-[28rem] h-96 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                  <span className="relative">
-                    {type === "signup" ? "Sign up" : "Sign in"}
-                  </span>
-                </span>
-                <span
-                  className="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
-                  data-rounded="rounded-lg"
-                ></span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-type LabelledInputProps = {
-  label: string;
-  placeholder: string;
-  type?: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  autoComplete?: string;
-};
-
-function LabelledInput({
-  label,
-  placeholder,
-  type = "text",
-  onChange,
-  autoComplete = "off",
-}: LabelledInputProps) {
-  return (
-    <div className="mt-4">
-      <label
-        htmlFor="hero-field"
-        className="leading-7 font-medium text-sm text-gray-800"
-      >
-        {label}
-      </label>
-      <input
-        type={type}
-        id="hero-field"
-        name="hero-field"
-        onChange={onChange}
-        placeholder={placeholder}
-        className="w-full bg-gray-300 rounded border bg-opacity-40 border-gray-700 focus:ring-2 focus:ring-gray-600 focus:bg-transparent focus:border-gray-500 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-        autoComplete={autoComplete}
-      />
-    </div>
-  );
+			<div className="grid gap-3 pt-10">
+				{type === "signin" ? null : (
+					<LabelInput
+						label="Name"
+						type="text"
+						placeholder="Name"
+						onChange={(e) => {
+							setPostInputs({
+								...postInputs,
+								name: e.target.value,
+							});
+						}}></LabelInput>
+				)}
+				<LabelInput
+					label="Email"
+					type="text"
+					placeholder="Email"
+					onChange={(e) => {
+						setPostInputs({
+							...postInputs,
+							email: e.target.value,
+						});
+					}}></LabelInput>
+				<LabelInput
+					label="Password"
+					type="password"
+					placeholder="Password"
+					onChange={(e) => {
+						setPostInputs({
+							...postInputs,
+							password: e.target.value,
+						});
+					}}></LabelInput>
+				<button
+					type="button"
+					onClick={sendRequest}
+					className="mt-5 text-white  bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+					{type === "signin" ? "Sign In" : "Sign Up"}
+				</button>
+			</div>
+			{/* <ToastContainer></ToastContainer> */}
+			<Toaster
+				closeButton
+				position="top-right"
+				duration={1200}></Toaster>
+		</div>
+	);
 }
