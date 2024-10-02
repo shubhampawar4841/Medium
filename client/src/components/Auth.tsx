@@ -1,4 +1,4 @@
-import { SignupInput } from "@100devs/medium-common";
+import { SignupType } from "@100devs/medium-common";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,9 +7,10 @@ import { BACKEND_URL } from "../config";
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
 
-  const [postInputs, setPostInputs] = useState<SignupInput>({
+  // Change 'username' to 'email' in your state
+  const [postInputs, setPostInputs] = useState<SignupType>({
     name: "",
-    username: "",
+    email: "",  // This should be 'email'
     password: "",
   });
 
@@ -70,7 +71,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 label="Email"
                 placeholder="Enter your email"
                 onChange={(e) => {
-                  setPostInputs({ ...postInputs, username: e.target.value });
+                  setPostInputs({ ...postInputs, email: e.target.value });  // Change 'username' to 'email'
                 }}
                 autoComplete="email"
               />
