@@ -1,4 +1,3 @@
-
 import z from "zod";
 export declare const signupInput: z.ZodObject<{
     email: z.ZodString;

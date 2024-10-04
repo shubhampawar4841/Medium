@@ -1,4 +1,3 @@
-
 import { verify } from "hono/jwt";
 
 export default async function authMiddleware(c: any, next: () => void) {

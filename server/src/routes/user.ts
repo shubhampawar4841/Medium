@@ -5,7 +5,7 @@ import { sign } from "hono/jwt";
 import {
 	signinInput,
 	signupInput,
-	updateUserDetailsInput
+	updateUserDetailsInput,
 } from "@100xdevs/medium-common";
 import authMiddleware from "../authMiddleware";
 
