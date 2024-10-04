@@ -26,11 +26,11 @@ export declare const updateUserDetailsInput: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
     password: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    name?: string | undefined;
     password?: string | undefined;
+    name?: string | undefined;
 }, {
-    name?: string | undefined;
     password?: string | undefined;
+    name?: string | undefined;
 }>;
 export declare const blogCreateInput: z.ZodObject<{
     title: z.ZodString;

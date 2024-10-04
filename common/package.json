@@ -1,17 +1,22 @@
 {
-  "name": "@shubhampawar/medium-common",
+  "name": "@shubhampawar/medium",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["medium", "blog", "platform"],  // Add relevant keywords
+  "author": "Shubham Pawar",                  // Your name
   "license": "ISC",
   "dependencies": {
     "@shubhampawar/medium-common": "^1.0.0",
     "typescript": "^5.6.2",
     "zod": "^3.23.8"
-  }
+  },
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "jest": "^your_version" // specify the version you are using
+  },
+  "description": "A blogging platform similar to Medium." // Brief description of your package
 }
