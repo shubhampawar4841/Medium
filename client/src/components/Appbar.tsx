@@ -1,131 +1,35 @@
-
 import { Link } from "react-router-dom";
-import Avatar from "./Avatar";
-import Logo from "./Logo";
-import { useUserDetails } from "../hooks";
-import { useState, useRef, useEffect } from "react";
-import Logout from "./Logout";
+import { Avatar } from "./BlogCard";
+import { Logout } from "./Logout";
+// import { useBlogs } from "../hooks";
 
-export default function Appbar({ write = true }: { write: boolean }) {
-	const userDetails = useUserDetails(localStorage.getItem("token"));
-	const [hover, setHover] = useState(false);
-	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				dropdownRef.current &&
-				!dropdownRef.current.contains(event.target as Node)
-			) {
-				setHover(false);
-			}
-		};
+export const Appbar = () => {
 
-		window.addEventListener("click", handleClickOutside);
-		return () => {
-			window.removeEventListener("click", handleClickOutside);
-		};
-	}, []);
+  return (
+    <div className="border-b flex justify-between px-10 py-4">
+      <Link
+        to={"/blogs"}
+        className="flex flex-col justify-center cursor-pointer text-2xl font-bold"
+      > 
+      {/* <svg viewBox="0 -55 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M72.2009141,1.42108547e-14 C112.076502,1.42108547e-14 144.399375,32.5485469 144.399375,72.6964154 C144.399375,112.844284 112.074049,145.390378 72.2009141,145.390378 C32.327779,145.390378 0,112.844284 0,72.6964154 C0,32.5485469 32.325326,1.42108547e-14 72.2009141,1.42108547e-14 Z M187.500628,4.25836743 C207.438422,4.25836743 223.601085,34.8960455 223.601085,72.6964154 L223.603538,72.6964154 C223.603538,110.486973 207.440875,141.134463 187.503081,141.134463 C167.565287,141.134463 151.402624,110.486973 151.402624,72.6964154 C151.402624,34.9058574 167.562834,4.25836743 187.500628,4.25836743 Z M243.303393,11.3867175 C250.314,11.3867175 256,38.835526 256,72.6964154 C256,106.547493 250.316453,134.006113 243.303393,134.006113 C236.290333,134.006113 230.609239,106.554852 230.609239,72.6964154 C230.609239,38.837979 236.292786,11.3867175 243.303393,11.3867175 Z" fill="#000000"> </path> </g> </g></svg> */}
+        
+        Medium
+      </Link>
 
-	return (
-		<div
-			className="h-16 p-2 px-10 border-b"
-			title="home">
-			<div className="flex justify-between ">
-				<Link
-					className="flex "
-					to={"/blogs"}>
-					<Logo />
-				</Link>
-				<div className="flex items-center gap-10">
-					{write ? (
-						<Link to={"/write"}>
-							<div className="flex items-center gap-1 font-light cursor-pointer">
-								<div>Write</div>
-
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									aria-label="Write">
-									<path
-										d="M14 4a.5.5 0 0 0 0-1v1zm7 6a.5.5 0 0 0-1 0h1zm-7-7H4v1h10V3zM3 4v16h1V4H3zm1 17h16v-1H4v1zm17-1V10h-1v10h1zm-1 1a1 1 0 0 0 1-1h-1v1zM3 20a1 1 0 0 0 1 1v-1H3zM4 3a1 1 0 0 0-1 1h1V3z"
-										fill="currentColor"></path>
-									<path
-										d="M17.5 4.5l-8.46 8.46a.25.25 0 0 0-.06.1l-.82 2.47c-.07.2.12.38.31.31l2.47-.82a.25.25 0 0 0 .1-.06L19.5 6.5m-2-2l2.32-2.32c.1-.1.26-.1.36 0l1.64 1.64c.1.1.1.26 0 .36L19.5 6.5m-2-2l2 2"
-										stroke="currentColor"></path>
-								</svg>
-							</div>
-						</Link>
-					) : (
-						""
-					)}
-					<div style={{ position: "relative" }}>
-						{!hover ? (
-							<div className="flex items-center gap-3">
-								<Avatar
-									name={userDetails.name}
-									size="big"
-								/>
-								<div className="flex justify-center gap-1 cursor-pointer ">
-									<div
-										onClick={() => {
-											setHover(!hover);
-										}}
-										className="border-b-4 first-letter:uppercase">
-										{userDetails.name}
-										<span className="relative bottom-0 font-bold">
-											&#8964;
-										</span>
-									</div>
-								</div>
-							</div>
-						) : (
-							<div
-								className="dropdown-content"
-								ref={dropdownRef}>
-								<div
-									onClick={() => {
-										setHover(!hover);
-									}}
-									className="flex items-center gap-3">
-									<Avatar
-										name={userDetails.name}
-										size="big"
-									/>
-									<div className="flex justify-center gap-1 cursor-pointer">
-										<div className="border-b-4 border-blue-950 first-letter:uppercase">
-											{userDetails.name}{" "}
-											<span className="relative bottom-0 font-bold">
-												&#8964;
-											</span>
-										</div>
-										<div className="relative bottom-0 font-bold"></div>
-									</div>
-								</div>
-								<div className="absolute bg-white dropdown-options top-12">
-									<div className="flex flex-col gap-3 py-3 pl-3 pr-10 border rounded-md shadow-lg text-nowrap">
-										<Link to={"/your-blogs"}>
-											<div>Your Blogs</div>
-										</Link>
-										<div>
-											<Link to={"/settings"}>
-												<div className="cursor-pointer">
-													Settings
-												</div>
-											</Link>
-										</div>
-										<div className="pt-1 -mt-1 border-t">
-											<Logout></Logout>
-										</div>
-									</div>
-								</div>
-							</div>
-						)}
-					</div>{" "}
-				</div>
-			</div>
-		</div>
-	);
-}
+      <div className="flex">
+        <Link to={"/publish"}>
+          <button
+            type="button"
+            className="mr-4 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
+          >
+            New Blog
+          </button>
+        </Link>
+        <Avatar size={"big"} name="Ahmed"/>
+        <Logout />
+      </div>
+      
+    </div>
+  );
+};

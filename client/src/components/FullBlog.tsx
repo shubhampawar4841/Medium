@@ -1,58 +1,41 @@
-
-import { Link } from "react-router-dom";
 import { Blog } from "../hooks";
-import Avatar from "./Avatar";
-import ShareBtn from "./ShareBtn";
-import Preview from "./Preview";
+import { Appbar } from "./Appbar";
+import { Avatar } from "./BlogCard";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
-	return (
-		<div className="flex justify-center pt-16">
-			<div className="justify-center p-3 md:w-3/4 lg:w-2/3">
-				<div className="pb-3 font-serif text-5xl font-extrabold ">
-					{blog.title}
-				</div>
-				<div className="flex justify-between ">
-					<div>
-						<div className="flex items-center gap-3">
-							<Link
-								to={"/user/" + blog.authorId}
-								className="flex items-center gap-3 ">
-								<Avatar name={blog.author.name} />
-								<div className="text-lg font-semibold first-letter:uppercase">
-									{blog.author.name}
-								</div>
-							</Link>
-							<div className="text-slate-400">&#x2022;</div>
-							<div className="flex gap-2 text-slate-500">
-								<div>Published on</div>
-								<div>
-									{blog.postedOn.substring(
-										0,
-										blog.postedOn.indexOf(",")
-									)}
-								</div>
+  return (
+    <div>
+      <Appbar />
+      <div className="flex justify-center">
+        <div className="grid grid-cols-12 w-full px-10 pt-20 max-w-screen-xl ">
+          <div className="col-span-8">
+            <div className="text-3xl font-extrabold">{blog.title}</div>
+            <div className="text-slate-500 pt-3">Posten on 23rd June 2023</div>
+            <div className="">{blog.content}</div>
+          </div>
 
-								<div className="text-slate-400">&#x2022;</div>
-								<div className="font-normal text-slate-500">
-									{`${
-										Math.ceil(blog.content.length / 500) > 1
-											? Math.ceil(
-													blog.content.length / 500
-											  ) + " minutes read"
-											: "1 minute read"
-									} `}
-								</div>
-							</div>
-						</div>
-					</div>
-					<ShareBtn link={window.location.href}></ShareBtn>
-				</div>
-				<div className="p-3 border-b"></div>
-				<div className="font-serif text-xl prose scale-x-90 scale-y-95 text-slate-800">
-					<Preview text={blog.content} />
-				</div>
-			</div>
-		</div>
-	);
+          <div className="col-span-4">
+            <div className="text-slate-600 text-lg">
+                Author
+            </div>
+            
+            <div className="flex">
+                <div className="pr-4 flex flex-col justify-center">
+                <Avatar size={"small"} name={blog.author.name || "Anonymous"}/>
+                </div>
+              <div>
+                <div className="text-xl font-bold">
+                  {blog.author.name || "Anonymous"}
+                </div>
+                <div className="pt-2 text-slate-500">
+                  Random catch phrase about the author's ability to grab the
+                  user's attention
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

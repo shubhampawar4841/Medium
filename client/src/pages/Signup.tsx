@@ -1,22 +1,23 @@
-import Auth from "../components/Auth";
-import  Quote  from "../components/Quote";
-import logo from "../assets/medium.png"
+// export import React from 'react'
 
-const Signup = () => {
+import Auth from "../components/Auth"
+import Quotes from "../components/Quotes"
+
+export const Signup = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2">
-      <div>
-        <div className="flex gap-2 items-center">
-        <img className="w-8 h-8 mt-2 ml-2" src={logo} alt="" />
-          <span className="text-2xl font-bold font-mono mt-2">Medium</span>
+    <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div>
+          <Auth type="signup"/>
         </div>
-        <Auth type="signup" />
+        <div className="hidden lg:block">
+          <Quotes/>
+        </div>
+   
       </div>
-      <div>
-        <Quote />
-      </div>
+        
     </div>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup

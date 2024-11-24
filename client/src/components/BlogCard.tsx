@@ -1,76 +1,66 @@
-import { Link } from "react-router-dom";
-import Avatar from "./Avatar";
-import ShareBtn from "./ShareBtn";
-import Preview from "./Preview";
-import EditBtn from "./EditBtn";
-import DeleteBtn from "./DeleteBtn";
+import { Link } from "react-router-dom"
 
-interface BlogCardProps {
-	authorName: string;
-	authorId: string;
-	title: string;
-	content: string;
-	id: string;
-	publishedDate: string;
+interface BlogCardProps{
+    authorname: string;
+    title: string;
+    content: string;
+    publishedDate: string;
+    id: number;
 }
 
-export default function BlogCard({
-	authorName,
-	title,
-	authorId,
-	content,
-	id,
+export const BlogCard = ({
+    authorname,
+    title,
+    content,
+    publishedDate,
+    id
+}: BlogCardProps) => {
+  return ( 
+  <Link to={`/blog/${id}`}>
+  <div className="p-4 border-b border-slate-300 pb-4 w-screen max-w-screen-md cursor-pointer">
+        <div className="flex">
+            <div className="">
+            <Avatar size={"small"} name={authorname}/> 
+            </div>
+           <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
+           {authorname}
+           </div>
+           <div className="pl-2 flex justify-center flex-col mt-1">
+            <Circle />
+           </div>
+           <div className="text-sm pl-2 font-thin text-slate-500 flex justify-center flex-col">
+           {publishedDate} 
+           </div>
+        </div>
+        <div className="text-2xl font-semibold pt-2">
+            {title}
+        </div>
+        <div className="text-ms font-thin">
+            {content.slice(0,100)+"..."}
+        </div>
+        <div className="text-slate-400 text-sm pt-4">
+            {`${Math.ceil(content.length / 100)} minutes(s) read`}
+        </div>
+    
+    </div>
+  </Link>
+    
+  )
+}
 
-	publishedDate,
-}: BlogCardProps) {
-	return (
-		<div className="pb-3 border-b border-slate-200">
-			<div className="flex items-center justify-between gap-32">
-				<div className="flex items-center gap-3 ">
-					<Link
-						to={"/user/" + authorId}
-						className="flex items-center gap-2 hover:scale-105">
-						<Avatar name={authorName}></Avatar>
-						<div className="text-base first-letter:uppercase">
-							{authorName}{" "}
-						</div>
-					</Link>
+export function Circle(){
+    return <div className="h-1 w-1 rounded-full bg-slate-500">
 
-					<div className="pb-3 text-2xl font-bold text-slate-400">
-						.
-					</div>
-					<div className="text-sm text-slate-400">
-						{publishedDate}
-					</div>
-				</div>
-				<div className="flex items-center justify-center gap-3">
-					<ShareBtn
-						link={`${window.location.origin}/blog/${id}`}></ShareBtn>
-					<EditBtn
-						authorId={authorId}
-						blogId={id}></EditBtn>
-					<DeleteBtn
-						blogId={id}
-						authorId={authorId}></DeleteBtn>
-				</div>
-			</div>
-			<Link
-				to={"/blog/" + id}
-				className="cursor-pointer hover:scale-105">
-				<div className="pt-2 font-serif text-2xl font-bold">
-					{title}
-				</div>
-				<div className="pt-1 font-serif font-thin text-slate-600">
-					<Preview text={content.slice(0, 450) + "..."}></Preview>
-				</div>
-				<div className="pt-2 text-sm font-normal text-slate-600">
-					{`${
-						Math.ceil(content.length / 500) > 1
-							? Math.ceil(content.length / 500) + " minutes read"
-							: "1 minute read"
-					} `}
-				</div>
-			</Link>
-		</div>
-	);
+    </div>
+}
+
+export function Avatar({ name, size= "small"}: { name: string, size: "small" | "big"}){
+    return <div className={`relative inline-flex items-center justify-center 
+    overflow-hidden bg-gray-400 rounded-full ${size === "small" ? "w-6 h-6": "w-10 h-10"}`}>
+        
+        <span className={`${size === "small" ? "text-xs" : "text-md"} font-small text-gray-900 dark:text-gray-300`}>
+            {name[0]}
+        </span>
+    </div>
+    
 }

@@ -1,4 +1,3 @@
-
 import Appbar from "../components/Appbar";
 import Avatar from "../components/Avatar";
 import BlogCard from "../components/BlogCard";

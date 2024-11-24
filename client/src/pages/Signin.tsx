@@ -1,22 +1,22 @@
-import Auth  from "../components/Auth";
-import  Quote  from "../components/Quote";
-import logo from "../assets/medium.png"
 
-const Signin = () => {
+import Auth from "../components/Auth"
+import Quotes from "../components/Quotes"
+
+export const Signin = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2">
-      <div>
-        <div className="flex gap-2 items-center">
-        <img className="w-8 h-8 mt-2 ml-2" src={logo} alt="" />
-          <span className="text-2xl font-bold font-mono mt-2">Medium</span>
+    <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div>
+          <Auth type="signin"/>
         </div>
-        <Auth type="signin" />
+        <div className="hidden lg:block">
+          <Quotes/>
+        </div>
+   
       </div>
-      <div>
-        <Quote />
-      </div>
+        
     </div>
-  );
-};
+  )
+}
 
-export default Signin;
+export default Signin

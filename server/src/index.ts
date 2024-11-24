@@ -1,4 +1,3 @@
-
 import { Hono } from "hono";
 import { userRouter } from "./routes/user";
 import { blogRouter } from "./routes/blog";
@@ -11,7 +10,14 @@ const app = new Hono<{
 		JWT_SECRET: string;
 	};
 }>();
-app.use(cors());
+
+// Apply CORS middleware to all routes
+app.use("*", cors({ 
+  origin: "*", // Allow all origins; modify as per your security requirements
+  allowMethods: ["GET", "POST", "PUT", "DELETE"], // Restrict allowed methods
+  allowHeaders: ["Authorization", "Content-Type"], // Allow custom headers
+}));
+
 
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);

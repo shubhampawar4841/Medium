@@ -7,8 +7,10 @@
   },
   "dependencies": {
     "@100xdevs/medium-common": "^1.0.0",
-    "@prisma/client": "^5.20.0",
+    "@praneethaylalvl1/medium-common": "^4.0.0",
+    "@prisma/client": "^5.22.0",
     "@prisma/extension-accelerate": "^1.1.0",
+    "@syedahmedullahjaser/zod-inference-medium-blog": "^1.0.6",
     "@types/moment-timezone": "^0.5.30",
     "@vercel/edge": "^1.1.2",
     "buffer": "^6.0.3",
@@ -17,13 +19,13 @@
     "hono": "^4.6.3",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
-    "prisma": "^5.20.0",
     "shubhampawar100xdevs": "^1.0.0",
     "stream": "^0.0.3",
     "util": "^0.12.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
+    "prisma": "^5.22.0",
     "wrangler": "^3.78.11"
   }
 }
