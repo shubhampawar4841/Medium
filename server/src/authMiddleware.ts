@@ -31,6 +31,21 @@ export default async function authMiddleware(c: any, next: () => void) {
       c.set("userId", user.id);
       await next();
     }
+  } catch (error: any) {
+    console.log("Error details:", error);
 
+    // Handle JWT validation errors
+    if (error.name === "JwtTokenInvalid" || error.name === "JwtExpired") {
+      c.status(403);
+      return c.json({
+        message: "You are not Authorized ggg",
+      });
+    }
+
+    // Handle other errors
+    c.status(400);
+    return c.json({
+      message: "Internal Server Error " + error.message,
+    });
   }
 }
