@@ -23,3 +23,12 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 }
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+}
