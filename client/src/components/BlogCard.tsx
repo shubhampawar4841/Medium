@@ -1,44 +1,77 @@
 import { Link } from "react-router-dom";
-import { Avatar } from "./Avatar";
+// Correct import for a named export
+import { Avatar } from './Avatar';
+import ShareBtn from "./ShareBtn";
+import Preview from "./Preview";
+import EditBtn from "./EditBtn";
+import DeleteBtn from "./DeleteBtn";
 
 interface BlogCardProps {
-  authorName: string;
-  title: string;
-  content: string;
-  publishedDate: string;
-  id: number;
+	authorName: string;
+	authorId: string;
+	title: string;
+	content: string;
+	id: string;
+	publishedDate: string;
 }
 
-export const BlogCard = ({
-  authorName,
-  title,
-  content,
-  publishedDate,
-  id
-}: BlogCardProps) => {
-  return (
-    <Link to={`/blog/${id}`} className="block">
-      <article className="p-6 border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200">
-        <div className="flex items-center mb-4">
-          <Avatar name={authorName} size="small" />
-          <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900">{authorName}</p>
-            <div className="flex items-center text-sm text-gray-500">
-              <time dateTime={publishedDate}>{publishedDate}</time>
-              <span className="mx-1">·</span>
-              <span>{`${Math.ceil(content.length / 100)} min read`}</span>
-            </div>
-          </div>
-        </div>
-        <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900">{title}</h2>
-        <p className="mb-4 text-base text-gray-500 line-clamp-3">{content}</p>
-        <div className="flex items-center text-sm text-gray-500">
-          <span className="mr-2 px-2 py-1 rounded-full bg-gray-100">Blog</span>
-          <span className="mr-2 px-2 py-1 rounded-full bg-gray-100">React</span>
-        </div>
-      </article>
-    </Link>
-  );
-};
+export default function BlogCard({
+	authorName,
+	title,
+	authorId,
+	content,
+	id,
 
-export default BlogCard;
+	publishedDate,
+}: BlogCardProps) {
+	return (
+		<div className="pb-3 border-b border-slate-200">
+			<div className="flex items-center justify-between gap-32">
+				<div className="flex items-center gap-3 ">
+					<Link
+						to={"/user/" + authorId}
+						className="flex items-center gap-2 hover:scale-105">
+						<Avatar name={authorName}></Avatar>
+						<div className="text-base first-letter:uppercase">
+							{authorName}{" "}
+						</div>
+					</Link>
+
+					<div className="pb-3 text-2xl font-bold text-slate-400">
+						.
+					</div>
+					<div className="text-sm text-slate-400">
+						{publishedDate}
+					</div>
+				</div>
+				<div className="flex items-center justify-center gap-3">
+					<ShareBtn
+						link={`${window.location.origin}/blog/${id}`}></ShareBtn>
+					<EditBtn
+						authorId={authorId}
+						blogId={id}></EditBtn>
+					<DeleteBtn
+						blogId={id}
+						authorId={authorId}></DeleteBtn>
+				</div>
+			</div>
+			<Link
+				to={"/blog/" + id}
+				className="cursor-pointer hover:scale-105">
+				<div className="pt-2 font-serif text-2xl font-bold">
+					{title}
+				</div>
+				<div className="pt-1 font-serif font-thin text-slate-600">
+					<Preview text={content.slice(0, 450) + "..."}></Preview>
+				</div>
+				<div className="pt-2 text-sm font-normal text-slate-600">
+					{`${
+						Math.ceil(content.length / 500) > 1
+							? Math.ceil(content.length / 500) + " minutes read"
+							: "1 minute read"
+					} `}
+				</div>
+			</Link>
+		</div>
+	);
+}

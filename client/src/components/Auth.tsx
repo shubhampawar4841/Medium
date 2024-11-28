@@ -1,114 +1,99 @@
-import { ChangeEvent, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { BACKEND_URL } from "../config"
-import axios from "axios"
-import { SignupInput } from "@syedahmedullahjaser/zod-inference-medium-blog"
+import { useState } from "react";
+import { SignupInput } from "@praneethaylalvl1/medium-common";
+import TitleAuth from "./AuthHeader";
+import LabelInput from "./LabelInput";
+import axios from "axios";
+import { BACKEND_URL } from "../config";
+import { toast, Toaster } from "sonner";
+import "react-toastify/dist/ReactToastify.css";
 
-export const Auth = ({type}: {type: "signup" | "signin"}) => {
-  const navigate = useNavigate();
-  const [postInputs, setPostInputs] = useState<SignupInput>({
-    name: "",
-    email: "",
-    password: ""
-  })
+export default function Auth({ type }: { type: "signup" | "signin" }) {
+	const [postInputs, setPostInputs] = useState<SignupInput>({
+		name: "",
+		email: "",
+		password: "",
+	});
 
-  async function sendRequest () {
-    try{
-      const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`, postInputs);
-      const jwt = response.data;
-      localStorage.setItem("token", jwt);
-      navigate("/blogs")
-    } catch (e){
-      alert("Error while signing up")
-    }
-  }
+	async function sendRequest() {
+		try {
+			const res = await axios.post(
+				`${BACKEND_URL}/api/v1/user/${
+					type === "signin" ? "signin" : "signup"
+				}`,
+				postInputs
+			);
 
-  return (
-    <div className="h-screen flex justify-center flex-col">
-      <div className="flex justify-center">
-        <div>
-          <div className="text-4xl font-extrabold pb-2">
-            Welcome to Medium! <br />
-          </div>
-          <div className="text-3xl font-extrabold ">
-            {type === "signup" ? "Create an account" : "Sign in"}
-          </div>
-          <div className="text-slate-500 mt-3 mb-3">
-            {type === "signin" ? "Don't have an account?" : "Already have an account?"}
-            <Link className="pl-2 underline" to={type === "signin" ? "/" : "/signin"}>
-              {type === "signin" ? "Sign Up" : "Sign In"}
-            </Link>
-          </div>
+			const jwt = res.data.jwt;
+			localStorage.setItem("token", jwt);
+			if (res.status === 200) {
+				const successMessage =
+					type === "signin"
+						? "Login Successful"
+						: "Signup Successful";
+				toast.success(successMessage);
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
+			}
+		} catch (error: any) {
+			console.warn(error);
+			const errorMessage =
+				error.response?.data?.message ?? "Invalid Inputs";
+			toast.warning(errorMessage, {
+				duration: 2000,
+			});
+		}
+	}
 
-          {type === "signup" && (
-            <LabelledInput
-              label="Name"
-              placeholder="name"
-              onChange={(e) => {
-                setPostInputs({
-                  ...postInputs,
-                  name: e.target.value
-                })
-              }}
-            />
-          )}
+	return (
+		<div className="flex flex-col items-center justify-center h-screen ">
+			<TitleAuth type={type}></TitleAuth>
 
-          <LabelledInput
-            label="Username"
-            placeholder="email@example.com"
-            onChange={(e) => {
-              setPostInputs({
-                ...postInputs,
-                email: e.target.value
-              })
-            }}
-          />
-
-          <LabelledInput
-            label="Password"
-            type="password"
-            placeholder="123456"
-            onChange={(e) => {
-              setPostInputs({
-                ...postInputs,
-                password: e.target.value
-              })
-            }}
-          />
-
-          <button
-            onClick={sendRequest}
-            type="button"
-            className="mt-6 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-          >
-            {type === "signup" ? "Sign Up" : "Sign In"}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
+			<div className="grid gap-3 pt-10">
+				{type === "signin" ? null : (
+					<LabelInput
+						label="Name"
+						type="text"
+						placeholder="Name"
+						onChange={(e) => {
+							setPostInputs({
+								...postInputs,
+								name: e.target.value,
+							});
+						}}></LabelInput>
+				)}
+				<LabelInput
+					label="Email"
+					type="text"
+					placeholder="Email"
+					onChange={(e) => {
+						setPostInputs({
+							...postInputs,
+							email: e.target.value,
+						});
+					}}></LabelInput>
+				<LabelInput
+					label="Password"
+					type="password"
+					placeholder="Password"
+					onChange={(e) => {
+						setPostInputs({
+							...postInputs,
+							password: e.target.value,
+						});
+					}}></LabelInput>
+				<button
+					type="button"
+					onClick={sendRequest}
+					className="mt-5 text-white  bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+					{type === "signin" ? "Sign In" : "Sign Up"}
+				</button>
+			</div>
+			{/* <ToastContainer></ToastContainer> */}
+			<Toaster
+				closeButton
+				position="top-right"
+				duration={1200}></Toaster>
+		</div>
+	);
 }
-
-interface LabelledInputType {
-  label: string;
-  placeholder: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-}
-
-function LabelledInput({ label, placeholder, onChange, type }: LabelledInputType) {
-  return (
-    <div>
-      <label className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">{label}</label>
-      <input
-        onChange={onChange}
-        type={type || "text"}
-        className="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder={placeholder}
-        required
-      />
-    </div>
-  )
-}
-
-export default Auth;
