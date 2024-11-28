@@ -1,66 +1,44 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { Avatar } from "./Avatar";
 
-interface BlogCardProps{
-    authorname: string;
-    title: string;
-    content: string;
-    publishedDate: string;
-    id: number;
+interface BlogCardProps {
+  authorName: string;
+  title: string;
+  content: string;
+  publishedDate: string;
+  id: number;
 }
 
 export const BlogCard = ({
-    authorname,
-    title,
-    content,
-    publishedDate,
-    id
+  authorName,
+  title,
+  content,
+  publishedDate,
+  id
 }: BlogCardProps) => {
-  return ( 
-  <Link to={`/blog/${id}`}>
-  <div className="p-4 border-b border-slate-300 pb-4 w-screen max-w-screen-md cursor-pointer">
-        <div className="flex">
-            <div className="">
-            <Avatar size={"small"} name={authorname}/> 
+  return (
+    <Link to={`/blog/${id}`} className="block">
+      <article className="p-6 border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+        <div className="flex items-center mb-4">
+          <Avatar name={authorName} size="small" />
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-900">{authorName}</p>
+            <div className="flex items-center text-sm text-gray-500">
+              <time dateTime={publishedDate}>{publishedDate}</time>
+              <span className="mx-1">·</span>
+              <span>{`${Math.ceil(content.length / 100)} min read`}</span>
             </div>
-           <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
-           {authorname}
-           </div>
-           <div className="pl-2 flex justify-center flex-col mt-1">
-            <Circle />
-           </div>
-           <div className="text-sm pl-2 font-thin text-slate-500 flex justify-center flex-col">
-           {publishedDate} 
-           </div>
+          </div>
         </div>
-        <div className="text-2xl font-semibold pt-2">
-            {title}
+        <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900">{title}</h2>
+        <p className="mb-4 text-base text-gray-500 line-clamp-3">{content}</p>
+        <div className="flex items-center text-sm text-gray-500">
+          <span className="mr-2 px-2 py-1 rounded-full bg-gray-100">Blog</span>
+          <span className="mr-2 px-2 py-1 rounded-full bg-gray-100">React</span>
         </div>
-        <div className="text-ms font-thin">
-            {content.slice(0,100)+"..."}
-        </div>
-        <div className="text-slate-400 text-sm pt-4">
-            {`${Math.ceil(content.length / 100)} minutes(s) read`}
-        </div>
-    
-    </div>
-  </Link>
-    
-  )
-}
+      </article>
+    </Link>
+  );
+};
 
-export function Circle(){
-    return <div className="h-1 w-1 rounded-full bg-slate-500">
-
-    </div>
-}
-
-export function Avatar({ name, size= "small"}: { name: string, size: "small" | "big"}){
-    return <div className={`relative inline-flex items-center justify-center 
-    overflow-hidden bg-gray-400 rounded-full ${size === "small" ? "w-6 h-6": "w-10 h-10"}`}>
-        
-        <span className={`${size === "small" ? "text-xs" : "text-md"} font-small text-gray-900 dark:text-gray-300`}>
-            {name[0]}
-        </span>
-    </div>
-    
-}
+export default BlogCard;

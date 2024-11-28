@@ -1,22 +1,25 @@
-export default function Avatar({
-	name,
-	size = "small",
-}: {
+interface AvatarProps {
 	name: string;
-	size?: "big" | "small";
-}) {
-	// Handle cases where `name` is empty or undefined
-	const displayName = name && name.length > 0 ? name[0].toUpperCase() : "?";
-
+	size: "small" | "big";
+  }
+  
+  export function Avatar({ name, size = "small" }: AvatarProps) {
 	return (
-		<div
-			className={`relative inline-flex items-center justify-center overflow-hidden bg-gray-300 rounded-full
-				${
-					size === "big"
-						? "h-10 w-10 text-xl font-bold"
-						: "h-8 w-8 text-base font-medium"
-				}`}>
-			<span>{displayName}</span>
-		</div>
+	  <div
+		className={`relative inline-flex items-center justify-center overflow-hidden bg-gray-400 rounded-full ${
+		  size === "small" ? "w-6 h-6" : "w-10 h-10"
+		}`}
+	  >
+		<span
+		  className={`${
+			size === "small" ? "text-xs" : "text-md"
+		  } font-medium text-gray-900 dark:text-gray-300`}
+		>
+		  {name[0]}
+		</span>
+	  </div>
 	);
-}
+  }
+  
+  export default Avatar;
+  

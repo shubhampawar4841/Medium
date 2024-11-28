@@ -5,30 +5,26 @@ import { Appbar } from "../components/Appbar";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 
 export const Blog = () => {
-
   const { id } = useParams()
   const {loading, blog} = useBlog({
     id: id || ""
   });
 
   if(loading || !blog){
-    return <div>
-      <Appbar/>
+    return (
+      <div>
+        <Appbar/>
         <div className="flex justify-center">
           <div>
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
+            {[...Array(8)].map((_, index) => (
+              <BlogSkeleton key={index} />
+            ))}
           </div>
-          
         </div>
-    </div>
+      </div>
+    )
   }
+
   return (
     <div>
       <FullBlog blog={blog} />
@@ -36,4 +32,4 @@ export const Blog = () => {
   )
 }
 
-export default Blog
+export default Blog;
