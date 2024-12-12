@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Blog } from "../hooks";
 import Avatar from "./Avatar";
