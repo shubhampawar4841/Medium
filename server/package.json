@@ -1,31 +1,20 @@
 {
-  "name": "server",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts",
-    "start": "node index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
-    "@100xdevs/medium-common": "^1.0.0",
-    "@praneethaylalvl1/medium-common": "^4.0.0",
-    "@prisma/client": "^5.22.0",
-    "@prisma/extension-accelerate": "^1.1.0",
-    "@syedahmedullahjaser/zod-inference-medium-blog": "^1.0.6",
+    "@praneethaylalvl1/medium-common": "^3.0.0",
+    "@prisma/client": "^6.0.0",
+    "@prisma/extension-accelerate": "^1.0.0",
     "@types/moment-timezone": "^0.5.30",
-    "@vercel/edge": "^1.1.2",
-    "buffer": "^6.0.3",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.4.5",
-    "hono": "^4.6.3",
-    "jsonwebtoken": "^9.0.2",
+    "hono": "^4.1.4",
     "moment-timezone": "^0.5.45",
-    "shubhampawar100xdevs": "^1.0.0",
-    "stream": "^0.0.3",
-    "util": "^0.12.5"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240529.0",
-    "prisma": "^5.22.0",
-    "wrangler": "^3.78.11"
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "prisma": "^6.0.0",
+    "wrangler": "^3.32.0"
   }
 }

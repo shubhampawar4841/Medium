@@ -3,7 +3,7 @@ import { SignupInput } from "@praneethaylalvl1/medium-common";
 import TitleAuth from "./AuthHeader";
 import LabelInput from "./LabelInput";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../../config";
 import { toast, Toaster } from "sonner";
 import "react-toastify/dist/ReactToastify.css";
 

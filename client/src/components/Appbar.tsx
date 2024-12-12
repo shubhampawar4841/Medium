@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-// Correct import for a named export
-import { Avatar } from './Avatar';
+import Avatar from "./Avatar";
 import Logo from "./Logo";
 import { useUserDetails } from "../hooks";
 import { useState, useRef, useEffect } from "react";

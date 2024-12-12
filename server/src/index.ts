@@ -1,7 +1,7 @@
-import { Hono } from 'hono';
-import { userRouter } from './routes/user';
-import { blogRouter } from './routes/blog';
-import { cors } from 'hono/cors';
+import { Hono } from "hono";
+import { userRouter } from "./routes/user";
+import { blogRouter } from "./routes/blog";
+import { cors } from "hono/cors";
 
 // Create the main Hono app
 const app = new Hono<{
@@ -11,21 +11,23 @@ const app = new Hono<{
   };
 }>();
 
-// Enable CORS for all routes
-app.use('/*', cors());
+// Apply CORS middleware with options
+app.use(
+  "*",
+  cors({
+    origin: "*", // Allow all origins. Replace "*" with specific origins for better security.
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    allowHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    maxAge: 600, // Preflight request cache duration in seconds
+  })
+);
 
-// Register routes
-app.route('api/v1/user', userRouter);
-app.route('api/v1/blog', blogRouter);
+// User routes
+app.route("/api/v1/user", userRouter);
 
-// Middleware example
-app.use('/message/*', async (c, next) => {
-  await next();
-});
+// Blog routes
+app.route("/api/v1/blog", blogRouter);
 
-// Root route
-app.get('/', (c) => {
-  return c.text('Server is running');
-});
+app.get("/", (c) => c.text("Server is running!"));
 
 export default app;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Appbar from "../components/Appbar";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../../config";
 import EditorPreview from "../components/Editor_Preview";
 import PostblogBtn from "../components/PostblogBtn";
 import { useParams, useNavigate } from "react-router-dom";

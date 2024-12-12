@@ -8,24 +8,33 @@ export default function Blogs() {
 	if (loading) {
 		return (
 			<div>
-				<Appbar write={true}></Appbar>
+				<Appbar write={true}></Appbar>;
 				<div className="flex justify-center pt-16">
 					<div className="flex flex-col justify-center w-5/6 gap-7 lg:w-1/2 md:w-2/3">
-						<p className="h-4 bg-gray-200 rounded-full" style={{ width: "40%" }}></p>
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
+
 						<ul className="mt-5 space-y-3">
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 						</ul>
-						<p className="h-4 bg-gray-200 rounded-full" style={{ width: "40%" }}></p>
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
+
 						<ul className="mt-5 space-y-3">
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 						</ul>
-						<p className="h-4 bg-gray-200 rounded-full" style={{ width: "40%" }}></p>
+						<p
+							className="h-4 bg-gray-200 rounded-full"
+							style={{ width: "40%" }}></p>
+
 						<ul className="mt-5 space-y-3">
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
 							<li className="w-full h-4 bg-gray-200 rounded-full"></li>
@@ -44,9 +53,6 @@ export default function Blogs() {
 			<div className="flex justify-center pt-16">
 				<div className="flex flex-col justify-center w-5/6 gap-7 lg:w-1/2 md:w-2/3">
 					{blogs.map((blog) => {
-						// Add a check for `postedOn` before calling `substring`
-						const formattedDate = blog.postedOn ? blog.postedOn.substring(0, 8) : "N/A";
-
 						return (
 							<BlogCard
 								authorId={blog.authorId}
@@ -55,7 +61,7 @@ export default function Blogs() {
 								authorName={blog.author.name}
 								content={blog.content}
 								title={blog.title}
-								publishedDate={formattedDate}
+								publishedDate={blog.postedOn.substring(0, 8)}
 							/>
 						);
 					})}

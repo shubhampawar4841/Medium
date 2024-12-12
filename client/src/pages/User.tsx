@@ -3,7 +3,7 @@ import { useUserData } from "../hooks";
 import Appbar from "../components/Appbar";
 import BlogCard from "../components/BlogCard";
 // Correct import for a named export
-import { Avatar } from '../components/Avatar';
+import Avatar from '../components/Avatar';
 
 export default function User() {
 	const { id } = useParams();

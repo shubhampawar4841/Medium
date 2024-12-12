@@ -1,33 +1,36 @@
 import z from "zod";
 
 export const signupInput = z.object({
-    email: z.string().email(),
-    password: z.string(),
-    name: z.string().optional()
-})
-
-//type inference in zod
-export type SignupInput = z.infer<typeof signupInput>    
+	email: z.string().email(),
+	password: z.string().min(6),
+	name: z.string(),
+});
 
 export const signinInput = z.object({
-    email: z.string().email(),
-    password: z.string(),
-    name: z.string().optional()
-})
+	email: z.string().email(),
+	password: z.string().min(6),
+});
 
-export type SigninInput = z.infer<typeof signinInput>    
+export const updateUserDetailsInput = z.object({
+	name: z.string().optional(),
+	password: z.string().min(6).optional(),
+});
 
-export const createBlogInput = z.object({
-    title: z.string(),
-    content: z.string()
-})
+export const blogCreateInput = z.object({
+	title: z.string(),
+	content: z.string(),
+	published: z.boolean().optional(),
+});
 
-export type CreateBlogInput = z.infer<typeof createBlogInput>    
+export const blogUpdateInput = z.object({
+	title: z.string(),
+	content: z.string(),
+	id: z.string(),
+	published: z.boolean(),
+});
 
-export const updateBlogInput = z.object({
-    title: z.string(),
-    content: z.string(),
-    id: z.number(),
-})
-
-export type UpdateBlogInput = z.infer<typeof updateBlogInput>    
+export type SigninInput = z.infer<typeof signinInput>;
+export type SignupInput = z.infer<typeof signupInput>;
+export type UpdateUserDetailsInput = z.infer<typeof updateUserDetailsInput>;
+export type BlogCreateInput = z.infer<typeof blogCreateInput>;
+export type BlogUpdateInput = z.infer<typeof blogUpdateInput>;

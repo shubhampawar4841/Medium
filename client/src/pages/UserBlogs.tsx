@@ -1,5 +1,5 @@
 import Appbar from "../components/Appbar";
-import {Avatar} from "../components/Avatar";
+import Avatar from "../components/Avatar";
 import BlogCard from "../components/BlogCard";
 import { useUserBoth } from "../hooks";
 

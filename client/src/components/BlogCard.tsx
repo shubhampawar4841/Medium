@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-// Correct import for a named export
-import { Avatar } from './Avatar';
+import Avatar from "./Avatar";
 import ShareBtn from "./ShareBtn";
 import Preview from "./Preview";
 import EditBtn from "./EditBtn";

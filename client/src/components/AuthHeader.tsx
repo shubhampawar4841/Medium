@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 
 export default function TitleAuth({ type }: { type: "signup" | "signin" }) {
