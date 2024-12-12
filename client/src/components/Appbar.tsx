@@ -32,9 +32,10 @@ export default function Appbar({ write = true }: { write: boolean }) {
 			title="home">
 			<div className="flex justify-between ">
 				<Link
-					className="flex "
+					className="flex items-center gap-2"
 					to={"/blogs"}>
 					<Logo />
+					<span className="text-lg font-semibold text-gray-800">Medium</span>
 				</Link>
 				<div className="flex items-center gap-10">
 					{write ? (
