@@ -14,12 +14,21 @@
 		"noEmit": true,
 		"jsx": "react-jsx",
 
-		/* Linting */
+		/* Linting and Type Checking */
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+
+		/* Support for JavaScript */
+		"allowJs": true,
+		"checkJs": true,
+
+		/* File Compatibility */
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true
 	},
-	"include": ["src", "config.ts"],
+	"include": ["src/**/*", "config.ts"],
+	"exclude": ["node_modules", "dist", "*.test.ts", "*.test.tsx"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
