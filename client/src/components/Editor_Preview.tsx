@@ -1,61 +1,65 @@
-import Preview from "./Preview";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+
+interface EditorPreviewProps {
+  markdown: string;
+  title: string;
+  setMarkdown: (value: string) => void;
+  setTitle: (value: string) => void;
+}
 
 export default function EditorPreview({
-	title,
-	markdown,
-	setTitle,
-	setMarkdown,
-}: {
-	title: string;
-	markdown: string;
-	setTitle: any;
-	setMarkdown: any;
-}) {
-	return (
-		<div>
-			<div className="flex justify-center">
-				<div className="grid w-screen grid-cols-1 p-3 sm:grid-cols-3 lg:grid-cols-2">
-					<div className="flex flex-col h-screen col-span-1 p-3 pr-5 mb-32 sm:m-0 sm:border-r-2 sm:col-span-2 lg:col-span-1">
-						<div className="flex flex-col h-fit">
-							<div className="pb-3 mb-10 text-3xl font-bold border-b-4 text-slate-500">
-								Editor:
-							</div>
+  markdown,
+  title,
+  setMarkdown,
+  setTitle,
+}: EditorPreviewProps) {
+  const [activeTab, setActiveTab] = useState("write");
 
-							<textarea
-								onChange={(e) => {
-									setTitle(e.target.value);
-								}}
-								value={title === "" ? "" : title}
-								// defaultValue={}
-								placeholder="Title"
-								maxLength={150}
-								className="p-3 mb-10 text-xl border resize-none min-h-28"
-							/>
-							<textarea
-								className="block min-h-full p-2 border resize-none min"
-								style={{ height: "auto" }}
-								placeholder="Write Markdown here to display it"
-								onChange={(e) => {
-									setMarkdown(e.target.value);
-								}}
-								value={markdown}></textarea>
-						</div>
-					</div>
-					<div className="h-screen col-span-1 p-3 pl-5 overflow-y-auto sm:col-span-1 lg:col-span-1">
-						<div>
-							<div className="pb-3 mb-4 text-3xl font-bold border-b-4 text-slate-500">
-								Preview:
-							</div>
-							<div className="flex flex-col font-serif text-4xl font-extrabold ">
-								<div className="pb-3 border-b-2">{title}</div>
-								<div className="pt-3 prose scale-x-90 scale-y-95">
-									<Preview text={markdown}></Preview>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="space-y-4">
+      <input
+        type="text"
+        placeholder="Enter your title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="w-full text-2xl font-bold p-2 border border-gray-300 rounded"
+      />
+      <div className="flex border-b border-gray-200">
+        <button
+          className={`py-2 px-4 ${
+            activeTab === "write"
+              ? "border-b-2 border-blue-500 text-blue-600"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+          onClick={() => setActiveTab("write")}
+        >
+          Write
+        </button>
+        <button
+          className={`py-2 px-4 ${
+            activeTab === "preview"
+              ? "border-b-2 border-blue-500 text-blue-600"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+          onClick={() => setActiveTab("preview")}
+        >
+          Preview
+        </button>
+      </div>
+      {activeTab === "write" ? (
+        <textarea
+          value={markdown}
+          onChange={(e) => setMarkdown(e.target.value)}
+          placeholder="Write your markdown here..."
+          className="w-full h-[500px] p-2 border border-gray-300 rounded font-mono"
+        />
+      ) : (
+        <div className="prose max-w-none min-h-[500px] p-4 border rounded-md bg-white">
+          <ReactMarkdown>{markdown}</ReactMarkdown>
+        </div>
+      )}
+    </div>
+  );
 }
+

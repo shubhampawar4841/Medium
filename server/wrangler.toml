@@ -5,3 +5,10 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNTViMjZiNTAtMGRjMi00ZTI1LWFjZGItMDg1MWU2ZWJiNDg5IiwidGVuYW50X2lkIjoiOWYzM2E1NDE3MTZkYzdjMWE3NDZhOTdkZjMzNmE3ZWY4Yjk4MDYwODVhMDEzYzQzYWJiMmRhOWQ3OWY3NDRmYyIsImludGVybmFsX3NlY3JldCI6IjEwZWNlMWI1LTNjZDItNDgwYS1hNWUzLTg2ZWIwOWE4ZGIxNyJ9.NoVDttrVrRT8wr7A5TzD0zbNXmo2tnLGOqEEffW28-I"
 JWT_SECRET = "vfgfdxh"
+
+[build]
+bundle = true
+external = [
+  "@supabase/supabase-js",
+  "uuid"
+]
