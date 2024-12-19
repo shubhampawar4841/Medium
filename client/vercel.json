@@ -1,0 +1,9 @@
+module.exports = {
+    experimental: {
+      errorOverlay: true, // Enables overlay for errors
+    },
+    typescript: {
+      ignoreBuildErrors: false, // Ensure typescript builds are error-free
+    },
+  };
+  
