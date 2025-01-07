@@ -26,7 +26,7 @@ export default function Quote() {
 				{quote ? (
 					<>
 						<div>"{quote.text}"</div>
-						<div className="mt-4 text-2xl font-semibold">
+						<div className="mt-4 text-2xl">
 							{quote.author.substring(
 								0,
 								quote.author.indexOf(",")
@@ -34,7 +34,7 @@ export default function Quote() {
 						</div>
 					</>
 				) : (
-					<div>Loading...</div>
+					<div>Words are free. It's how you use them that may cost you.</div>
 				)}
 			</div>
 		</div>
